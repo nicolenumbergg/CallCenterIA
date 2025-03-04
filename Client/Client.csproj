@@ -16,4 +16,10 @@
       <ProjectReference Include="..\ClientLibrary\ClientLibrary.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Components\Custom\" />
+      <Folder Include="Components\General\" />
+      <Folder Include="Components\Pages\" />
+    </ItemGroup>
+
 </Project>
