@@ -8,3 +8,19 @@
 @using Microsoft.JSInterop
 @using Client
 @using Client.Layout
+@using ClientLibrary.Services.Contracts
+@using Microsoft.FluentUI.AspNetCore.Components
+@using Microsoft.FluentUI.AspNetCore.Components.Components.Tooltip
+@using Microsoft.AspNetCore.Components.Authorization
+@using BaseLibrary.DTOs
+@using BaseLibrary.Entities
+@using BaseLibrary.Responses
+@using ClientLibrary.Helpers
+
+@inject IUserAccountService UserAccountService
+@inject NavigationManager NavManager
+@inject AuthenticationStateProvider AuthStateProvider
+@inject IToastService ToastService
+@inject ITooltipService TooltipService
+@inject LocalStorageService LocalStorageService
+@inject IDialogService DialogService

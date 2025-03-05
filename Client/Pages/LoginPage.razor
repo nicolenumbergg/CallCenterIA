@@ -1,0 +1,60 @@
+@page "/Login"
+
+@layout EmptyLayout
+
+<div class="contenedor" style="width:100dvw;height:100dvh;justify-content:center;align-items:center;display:grid;">
+    <FluentStack Orientation="Orientation.Vertical" Style="place-items: center;place-content: center">
+        <FluentCard Width="350px" Height="490px" Style="justify-content: center">
+            <FluentEditForm Model="@_loginPageModel" OnValidSubmit="HandleLogin" Style="margin-left:20px;margin-right:20px;">
+                <DataAnnotationsValidator/>
+
+                <FluentStack Orientation="Orientation.Vertical">
+                    <FluentGrid Justify="JustifyContent.Center" Style="width: 100%;padding: 40px;">
+                        <img src="logos/call-center-logo.jpg" style="width: 150px;height: 150px;" alt="CALL CENTER IA"/>
+                    </FluentGrid>
+
+                    <FluentTextField Id="UsernameField" @bind-Value="@_loginPageModel.Username" Style="width: 100%" Label="Nombre de Usuario" Placeholder="Nombre de Usuario">
+                        <FluentIcon Value="@(new Icons.Regular.Size24.Person())" Slot="start" Color="Color.Neutral"/>
+                    </FluentTextField>
+                    <FluentValidationMessage For="@(() => _loginPageModel.Username)"></FluentValidationMessage>
+
+                    <FluentTextField Id="PasswordField" @bind-Value="@_loginPageModel.Password" TextFieldType="TextFieldType.Password" Label="Clave/Contraseña" Style="width: 100%" Placeholder="Clave/Contraseña">
+                        <FluentIcon Value="@(new Icons.Regular.Size24.Password())" Slot="start" Color="Color.Neutral"/>
+                    </FluentTextField>
+                    <FluentValidationMessage For="@(() => _loginPageModel.Password)"></FluentValidationMessage>
+
+                    <FluentGrid Justify="JustifyContent.FlexEnd" Style="width: 100%">
+                        <div>
+                            <FluentButton Type="ButtonType.Submit" Appearance="Appearance.Accent" Loading="@BusyIndicator">Iniciar Sesion</FluentButton>
+                        </div>
+                    </FluentGrid>
+                </FluentStack>
+            </FluentEditForm>
+        </FluentCard>
+    </FluentStack>
+</div>
+
+@code {
+    Login _loginPageModel = new Login();
+    bool BusyIndicator { get; set; } = false;
+
+    public async void HandleLogin()
+    {
+        BusyIndicator = true;
+        var result = await UserAccountService.SignInAsync(_loginPageModel);
+        if (result.Flag)
+        {
+            var customAuthStateProvider = (CustomAuthenticationStateProvider)AuthStateProvider;
+            await customAuthStateProvider.UpdateAuthenticationState(new UserSession { Token = result.Token, RefreshToken = result.RefreshToken});
+            ToastService.ShowSuccess("Inicio de Sesion Exitoso");
+            NavManager.NavigateTo("/", forceLoad: true, replace: false);
+        }
+        else
+        {
+            BusyIndicator = false;
+            _loginPageModel.Password = string.Empty;
+            ToastService.ShowError(result.Message);
+        }
+        StateHasChanged();
+    }
+}

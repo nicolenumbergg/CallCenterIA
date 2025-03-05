@@ -124,7 +124,7 @@ public class UserAccountRepository(IOptions<JwtSection> config, AppDBContext app
         var userClaims = new[]
         {
             new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new Claim(ClaimTypes.Name, user.Username),
+            new Claim(ClaimTypes.Name, user.Username!),
             new Claim(ClaimTypes.Role, role)
         };
 
